@@ -16,10 +16,11 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-08-01' = {
   } 
 }
 
-resource subnetworks 'Microsoft.Network/virtualNetworks/subnets@2020-08-01' = [ for subnet in subnets: {
-  name: 'subnets'
+@batchSize(1)
+resource vnetSubnets 'Microsoft.Network/virtualNetworks/subnets@2020-08-01' = [ for subnet in subnets: {
+  name: '${vnet.name}/${subnet.name}'
   properties: {
-    
+    addressPrefix: subnet.addressPrefix
   }
 }]
 

@@ -1,10 +1,10 @@
 export RG_NAME="webinar"
 export RG_LOCATION="eastus2"
-export BICEP_FILE="webinar.bicep"
-export WEBINAR_PARAMETERS
+export BICEP_FILE="000-main.bicep"
+export WEBINAR_PARAMETERS="parameters.json"
 
 # Login to your Azure account
-az login
+# az login
 
 # Create the Resource Group to deploy the Webinar Environment
 az group create --name $RG_NAME --location $RG_LOCATION
