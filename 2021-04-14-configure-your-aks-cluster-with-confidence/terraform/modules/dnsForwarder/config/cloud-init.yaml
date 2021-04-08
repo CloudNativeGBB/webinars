@@ -1,0 +1,11 @@
+#cloud-config
+
+package_update: true
+packages:
+  - bind9
+write_files:
+- encoding: b64
+  content: ${bind9conf}
+  owner: bind:bind
+  path: /etc/bind/named.conf.options
+  permissions: '0660'

@@ -1,0 +1,16 @@
+.DS_Store
+
+# Terraform Things
+.terraform/
+*.tfstate*
+tfplan
+*.lock.hcl
+
+# Certificates being generated
+*.pem
+*.der
+*.p12
+*.cer
+
+# Temp VPN Config Settings
+vpnconfig/
