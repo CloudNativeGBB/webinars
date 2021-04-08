@@ -24,6 +24,7 @@ var aksSubnetInfo = {
   name: 'AksSubnet'
   properties: {
     addressPrefix: '10.0.4.0/22'
+    privateEndpointNetworkPolicies: 'Disabled'
   }
 }
 
@@ -56,12 +57,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-08-01' = {
         vnetPrefix
       ]
     }
-    subnets: [
-      {
-        name: firewallSubnetInfo.name
-        properties: firewallSubnetInfo.properties
-      }
-    ]
+    subnets: allSubnets
   } 
 }
 
@@ -92,6 +88,7 @@ resource defaultSubnets 'Microsoft.Network/virtualNetworks/subnets@2020-08-01' =
     routeTable: {
       id: defaultRouteTable.id
     }
+    privateEndpointNetworkPolicies: 'Disabled'
   }
 }]
 
