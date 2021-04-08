@@ -1,7 +1,7 @@
-export RG_NAME="webinar"
+export RG_NAME="webinar3"
 export RG_LOCATION="eastus2"
 export BICEP_FILE="000-main.bicep"
-export WEBINAR_PARAMETERS="parameters.json"
+export WEBINAR_PARAMETERS="@parameters.json"
 
 # Login to your Azure account
 # az login
@@ -14,4 +14,6 @@ az deployment group create \
   --name webinarenvironment \
   --resource-group $RG_NAME \
   --template-file $BICEP_FILE \
-  --parameters $WEBINAR_PARAMETERS
+  --parameters $WEBINAR_PARAMETERS \
+  --parameters adminPublicKey="$(cat ~/.ssh/id_rsa.pub)" \
+  --mode Incremental

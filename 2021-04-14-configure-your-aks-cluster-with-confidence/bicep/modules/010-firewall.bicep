@@ -40,4 +40,4 @@ resource Firewall 'Microsoft.Network/azureFirewalls@2020-08-01' = {
   }
 }
 
-output privateIpAddress string = Firewall.properties.hubIPAddresses.privateIPAddress
+// output privateIpAddress string = Firewall.properties.hubIPAddresses.privateIPAddress
