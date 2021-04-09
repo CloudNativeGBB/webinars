@@ -1,22 +1,17 @@
 param prefix string
+param suffix string
 param clusterName string
 param vnetPrefix string
 param adminUsername string = 'azueruser'
 param adminPublicKey string
 param aadTenantId string = subscription().tenantId
 param adminGroupObjectIDs array = []
+param acrRole string
 
 var firewallSubnetInfo = {
   name: 'AzureFirewallSubnet'
   properties: {
     addressPrefix: '10.0.0.0/26'
-  }
-}
-
-var vpnGatewaySubnetInfo = {
-  name: 'GatewaySubnet'
-  properties: {
-    addressPrefix: '10.0.1.0/24'
   }
 }
 
@@ -37,12 +32,6 @@ var jumpboxSubnetInfo = {
 
 var allSubnets = [
   firewallSubnetInfo
-  vpnGatewaySubnetInfo
-  aksSubnetInfo
-  jumpboxSubnetInfo
-]
-
-var genericSubnets = [
   aksSubnetInfo
   jumpboxSubnetInfo
 ]
@@ -61,34 +50,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-08-01' = {
   } 
 }
 
-resource firewallSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-08-01' = {
-  name: '${vnet.name}/${firewallSubnetInfo.name}'
-  properties: firewallSubnetInfo.properties
-}
-
-resource vpnGatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2020-08-01' = {
-  dependsOn: [
-    firewallSubnet
-  ]
-
-  name: '${vnet.name}/${vpnGatewaySubnetInfo.name}'
-  properties: vpnGatewaySubnetInfo.properties
-}
-
-@batchSize(1)
-resource defaultSubnets 'Microsoft.Network/virtualNetworks/subnets@2020-08-01' = [ for subnet in genericSubnets: {
-  name: '${vnet.name}/${subnet.name}'
-  properties: {
-    addressPrefix: subnet.properties.addressPrefix
-    privateEndpointNetworkPolicies: 'Disabled'
-  }
-}]
-
 module aks 'modules/040-aks-cluster.bicep' = {
-  dependsOn: [
-    defaultSubnets
-  ]
-
   name: 'AksPrivateCluster'
   params: {
     clusterName: '${prefix}-aks-cluster'
@@ -99,5 +61,26 @@ module aks 'modules/040-aks-cluster.bicep' = {
   }
 }
 
-// Outputs
-output vnetId string = vnet.id
+// ACR ARM Template: https://docs.microsoft.com/en-us/azure/templates/microsoft.containerregistry/registries?tabs=json#QuarantinePolicy
+resource acr 'Microsoft.ContainerRegistry/registries@2020-11-01-preview' = {
+  name: '${prefix}${suffix}'
+  location: resourceGroup().location
+  sku: {
+    name: 'Premium'
+  }
+  properties: {
+    adminUserEnabled: false // disable username/password auth
+
+  }
+}
+
+// Role Assignments ARM Template: https://docs.microsoft.com/en-us/azure/templates/microsoft.authorization/2020-04-01-preview/roleassignments?tabs=json#RoleAssignmentProperties
+// ACR Permissions: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-roles
+resource aksAcrPermissions 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid('aksAcrPermissions', prefix)
+  scope: acr
+  properties: {
+    principalId: aks.outputs.identity
+    roleDefinitionId: acrRole
+  }
+}

@@ -2,14 +2,19 @@
 	"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
 	"contentVersion": "1.0.0.0",
 	"parameters": {
-	  "prefix": {
-		"value": "webinar3"
-	  },
-	  "clusterName": {
-		"value": "webinarAKS"
-	  },
-	  "vnetPrefix": {
-		  "value": "10.0.0.0/16"
-	  }
+		"clusterName": {
+			"value": "webinarAKS"
+		},
+		"vnetPrefix": {
+			"value": "10.0.0.0/16"
+		},
+		"aadTenantId": {
+			"value": "5610280d-5d76-45c9-844f-4ef41f8e0c5f"
+		},
+		"adminGroupObjectIDs": {
+			"value": [
+				"1c8d1169-0a21-421f-b836-1c3766e27839"
+			]
+		}
 	}
   }
