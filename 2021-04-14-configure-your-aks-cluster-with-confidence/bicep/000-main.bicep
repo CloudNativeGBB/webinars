@@ -77,56 +77,14 @@ resource vpnGatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2020-08-01'
 
 @batchSize(1)
 resource defaultSubnets 'Microsoft.Network/virtualNetworks/subnets@2020-08-01' = [ for subnet in genericSubnets: {
-  dependsOn: [
-    vpnGatewaySubnet
-    defaultRouteTable
-  ]
-
   name: '${vnet.name}/${subnet.name}'
   properties: {
     addressPrefix: subnet.properties.addressPrefix
-    routeTable: {
-      id: defaultRouteTable.id
-    }
     privateEndpointNetworkPolicies: 'Disabled'
   }
 }]
 
-resource defaultRouteTable 'Microsoft.Network/routeTables@2020-08-01' = {
-  dependsOn: [
-    firewall
-  ]
-  name: 'DefaultRouteTable'
-  location: resourceGroup().location
-  properties: {}
-}
-
-resource defaultRoute 'Microsoft.Network/routeTables/routes@2020-08-01' = {
-  dependsOn: [
-    defaultRouteTable
-  ]
-  name: '${defaultRouteTable.name}/DefaultRoute'
-  properties: {
-    addressPrefix: '0.0.0.0/0'
-    nextHopType: 'VirtualAppliance'
-    nextHopIpAddress: '10.0.0.4'
-
-  }
-}
-
-module firewall 'modules/010-firewall.bicep' = {
-  name: 'AzureFirewall'
-  dependsOn: [
-    firewallSubnet
-  ]
-
-  params: {
-    prefix: prefix
-    subnetId: '${vnet.id}/subnets/${firewallSubnetInfo.name}'
-  }
-}
-
-module aks 'modules/040-aks-private-cluster.bicep' = {
+module aks 'modules/040-aks-cluster.bicep' = {
   dependsOn: [
     defaultSubnets
   ]

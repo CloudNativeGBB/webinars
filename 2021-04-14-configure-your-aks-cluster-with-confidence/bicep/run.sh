@@ -2,6 +2,7 @@ export RG_NAME="webinar3"
 export RG_LOCATION="eastus2"
 export BICEP_FILE="000-main.bicep"
 export WEBINAR_PARAMETERS="@parameters.json"
+export SUFFIX=$(openssl rand -hex 2)
 
 # Login to your Azure account
 # az login
