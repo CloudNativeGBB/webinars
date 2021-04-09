@@ -56,7 +56,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-02-01' = {
     autoUpgradeProfile: {}
 
     apiServerAccessProfile: {
-      enablePrivateCluster: true
+      enablePrivateCluster: false // we're not deploying a private cluster in this webinar
       // privateDNSZone: 'some.customdomain.com' // allows you to BYO DNS
       // authorizedIPRanges: [] // we are not whitelisting IP ranges to communicate with the API server
     }
