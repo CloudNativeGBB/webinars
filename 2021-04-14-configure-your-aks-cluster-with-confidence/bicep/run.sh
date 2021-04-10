@@ -1,8 +1,9 @@
-export RG_NAME="webinar"
+export PREFIX="webinar"
+export SUFFIX="randsuffix"
+export RG_NAME=$PREFIX-$SUFFIX
 export RG_LOCATION="eastus2"
 export BICEP_FILE="000-main.bicep"
 export WEBINAR_PARAMETERS="@parameters.json"
-export SUFFIX=$(openssl rand -hex 2)
 # Must search for the 'ACRPull' role to get GUID
 export ACR_PULL_ROLE=$(az role definition list --name 'AcrPull' | jq -r .[].id)
 
@@ -18,7 +19,7 @@ az deployment group create \
   --resource-group $RG_NAME \
   --template-file $BICEP_FILE \
   --parameters $WEBINAR_PARAMETERS \
-  --parameters prefix=$RG_NAME \
+  --parameters prefix=$PREFIX \
   --parameters suffix=$SUFFIX \
   --parameters adminPublicKey="$(cat ~/.ssh/id_rsa.pub)" \
   --parameters acrRole=$ACR_PULL_ROLE \

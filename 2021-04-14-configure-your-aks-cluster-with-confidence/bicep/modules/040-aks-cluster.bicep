@@ -8,7 +8,7 @@ param adminGroupObjectIDs array
 // https://docs.microsoft.com/en-us/azure/templates/microsoft.containerservice/managedclusters?tabs=json#ManagedClusterAgentPoolProfile
 
 resource aks 'Microsoft.ContainerService/managedClusters@2021-02-01' = {
-  name: 'AksCluster'
+  name: clusterName
   location: resourceGroup().location
   identity: {
     type: 'SystemAssigned'

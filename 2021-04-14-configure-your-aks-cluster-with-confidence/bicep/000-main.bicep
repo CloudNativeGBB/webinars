@@ -1,6 +1,5 @@
 param prefix string
 param suffix string
-param clusterName string
 param vnetPrefix string
 param adminUsername string = 'azueruser'
 param adminPublicKey string
@@ -37,7 +36,7 @@ var allSubnets = [
 ]
 
 resource vnet 'Microsoft.Network/virtualNetworks@2020-08-01' = {
-  name: '${prefix}-vnet'
+  name: '${prefix}-${suffix}-vnet'
   location: resourceGroup().location
 
   properties: {
@@ -51,9 +50,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-08-01' = {
 }
 
 module aks 'modules/040-aks-cluster.bicep' = {
-  name: 'AksPrivateCluster'
+  name: 'AksCluster'
   params: {
-    clusterName: '${prefix}-aks-cluster'
+    clusterName: '${prefix}-${suffix}-aks'
     subnetId: '${vnet.id}/subnets/${aksSubnetInfo.name}'
     adminPublicKey: adminPublicKey
     aadTenantId: aadTenantId
@@ -77,7 +76,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2020-11-01-preview' = {
 // Role Assignments ARM Template: https://docs.microsoft.com/en-us/azure/templates/microsoft.authorization/2020-04-01-preview/roleassignments?tabs=json#RoleAssignmentProperties
 // ACR Permissions: https://docs.microsoft.com/en-us/azure/container-registry/container-registry-roles
 resource aksAcrPermissions 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid('aksAcrPermissions', prefix)
+  name: guid(resourceGroup().id)
   scope: acr
   properties: {
     principalId: aks.outputs.identity
