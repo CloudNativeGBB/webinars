@@ -22,10 +22,10 @@ resource azurerm_kubernetes_cluster dev {
   identity {
     type = var.aks_settings.identity
   }
-  # linux_profile {
-  #   admin_username = var.aks_settings.admin_username
-  #   ssh_key        = var.aks_settings.ssh_key
-  # }
+  linux_profile {
+    admin_username = "azureuser"
+    ssh_key					= file("~/.ssh/id_rsa.pub")
+  }
 
   network_profile {
     network_plugin     = var.aks_settings.network_plugin

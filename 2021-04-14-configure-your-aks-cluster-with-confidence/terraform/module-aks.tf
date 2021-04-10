@@ -27,7 +27,6 @@ module "aks" {
 		service_cidr			= "192.168.0.0/24"
 		dns_service_ip 			= "192.168.0.10"
 		docker_bridge_cidr 		= "172.17.0.1/16"
-		# ssh_key					= null
 	}
 
 	default_node_pool = {

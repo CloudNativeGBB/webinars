@@ -36,9 +36,9 @@ variable aks_settings {
 		network_plugin			= "azure"
 		network_policy			= "calico"
 		load_balancer_sku		= "standard"
-		service_cidr			= "192.168.0.0/24"
-		dns_service_ip 			= "192.168.0.10"
-		docker_bridge_cidr 		= "172.17.0.1/16"
+		service_cidr			= "172.16.0.0/22"
+		dns_service_ip 			= "172.16.0.10"
+		docker_bridge_cidr 		= "172.16.4.1/16"
 		# admin_username			= "azureuser"
 		# ssh_key					= null
 	}

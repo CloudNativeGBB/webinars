@@ -7,13 +7,6 @@ param aadTenantId string = subscription().tenantId
 param adminGroupObjectIDs array = []
 param acrRole string
 
-var firewallSubnetInfo = {
-  name: 'AzureFirewallSubnet'
-  properties: {
-    addressPrefix: '10.0.0.0/26'
-  }
-}
-
 var aksSubnetInfo = {
   name: 'AksSubnet'
   properties: {
@@ -22,17 +15,8 @@ var aksSubnetInfo = {
   }
 }
 
-var jumpboxSubnetInfo = {
-  name: 'JumpboxSubnet'
-  properties: {
-    addressPrefix: '10.0.255.240/28'
-  }
-}
-
 var allSubnets = [
-  firewallSubnetInfo
   aksSubnetInfo
-  jumpboxSubnetInfo
 ]
 
 resource vnet 'Microsoft.Network/virtualNetworks@2020-08-01' = {

@@ -9,13 +9,3 @@ variable "location" {
 	description = "Default Azure Region"
 	default = "canadacentral"
 }
-
-variable "vpn_sku" {
-  type = string
-  default = "VpnGw1AZ"
-}
-
-variable "domain" {
-  type = string
-  default = "azuregbb.com"
-}

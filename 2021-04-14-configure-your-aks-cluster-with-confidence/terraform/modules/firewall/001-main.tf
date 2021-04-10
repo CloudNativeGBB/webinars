@@ -1,3 +1,0 @@
-locals {
-  prefix = var.prefix
-}
