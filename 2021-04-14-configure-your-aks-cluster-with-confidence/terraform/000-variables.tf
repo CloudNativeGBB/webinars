@@ -1,7 +1,7 @@
 variable "prefix" {
 	type = string
 	description = "Value to prefix resource names with."
-	default = "webinar"
+	default = "webinartf"
 }
 
 variable "location" {

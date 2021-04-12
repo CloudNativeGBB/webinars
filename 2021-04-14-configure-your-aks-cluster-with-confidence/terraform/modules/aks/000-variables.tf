@@ -12,7 +12,6 @@ variable "resource_group" {
 variable aks_settings {
 	type = object({
 		kubernetes_version		= string
-		private_cluster_enabled = bool
 		identity 				= string
 		outbound_type			= string
 		network_plugin			= string
@@ -21,12 +20,13 @@ variable aks_settings {
 		service_cidr			= string
 		dns_service_ip 			= string
 		docker_bridge_cidr 		= string
-		# admin_username			= string
-		# ssh_key					= string
+		sku_tier				= string
+		role_based_access_control_enabled = bool
+		azure_active_directory_managed = bool
+		admin_group_object_ids  = list(string)
 	})
 	default = {
 		kubernetes_version		= null
-		private_cluster_enabled = false
 		identity 				= "SystemAssigned"
 		outbound_type			= "loadBalancer"
 		network_plugin			= "azure"
@@ -34,7 +34,11 @@ variable aks_settings {
 		load_balancer_sku		= "standard"
 		service_cidr			= "172.16.0.0/22"
 		dns_service_ip 			= "172.16.0.10"
-		docker_bridge_cidr 		= "172.16.4.1/16"
+		docker_bridge_cidr 		= "172.16.4.1/22"
+		sku_tier				= "Paid"
+		role_based_access_control_enabled = true
+		azure_active_directory_managed = true
+		admin_group_object_ids  = [null]
 		# admin_username			= "azureuser"
 		# ssh_key					= null
 	}
@@ -50,6 +54,7 @@ variable default_node_pool {
 		vm_size = string
 		type    = string
 		os_disk_size_gb = number
+		only_critical_addons_enabled = bool
 	})
 	
 	default = {
@@ -61,6 +66,7 @@ variable default_node_pool {
 		vm_size = "Standard_D4s_v3"
 		type    = "VirtualMachineScaleSets"
 		os_disk_size_gb = 30
+		only_critical_addons_enabled = true
 	}
 }
 
@@ -70,6 +76,7 @@ variable user_node_pools {
 		node_count = number
 		node_labels = map(string)
 		node_taints = list(string)
+		mode = string
 	}))
 	
 	default = {
@@ -78,6 +85,7 @@ variable user_node_pools {
 			node_count = 3
 			node_labels = null
 			node_taints = []
+			mode = "User"
 		}
 	}
 }

@@ -14,7 +14,7 @@ resource azurerm_kubernetes_cluster dev {
   dns_prefix          = "${local.prefix}-aks-cluster"
   
   kubernetes_version  = var.aks_settings.kubernetes_version
-  private_cluster_enabled = var.aks_settings.private_cluster_enabled
+  private_cluster_enabled = false
 
   default_node_pool {
     name                = var.default_node_pool.name
@@ -25,6 +25,7 @@ resource azurerm_kubernetes_cluster dev {
     os_disk_size_gb     = var.default_node_pool.os_disk_size_gb
     type                = var.default_node_pool.type
     vnet_subnet_id      = var.subnet_id
+    only_critical_addons_enabled = var.default_node_pool.only_critical_addons_enabled
   }
 
   identity {
@@ -33,7 +34,9 @@ resource azurerm_kubernetes_cluster dev {
 
   linux_profile {
     admin_username = "azureuser"
-    ssh_key					= file("~/.ssh/id_rsa.pub")
+    ssh_key					{
+      key_data = file("~/.ssh/id_rsa.pub")
+    }
   }
 
   network_profile {
@@ -43,7 +46,7 @@ resource azurerm_kubernetes_cluster dev {
     service_cidr       = var.aks_settings.service_cidr
     dns_service_ip     = var.aks_settings.dns_service_ip
     docker_bridge_cidr = var.aks_settings.docker_bridge_cidr
-    outbound_type      = var.aks_settings.private_cluster_enabled == true ? "userDefinedRouting" : "loadBalancer"
+    outbound_type      = var.aks_settings.outbound_type
   }
 
   addon_profile {
@@ -56,15 +59,16 @@ resource azurerm_kubernetes_cluster dev {
     }
   }
   
-  # role_based_access_control {
-  #   enabled = true
+  sku_tier = var.aks_settings.sku_tier
 
-  #   azure_active_directory {
-  #     managed = true
-  #     tenant_id = local.tenant_id
+  role_based_access_control {
+    enabled = var.aks_settings.role_based_access_control_enabled
 
-  #   }    
-  # }
+    azure_active_directory {
+      managed = var.aks_settings.azure_active_directory_managed
+      admin_group_object_ids = var.aks_settings.admin_group_object_ids
+    }    
+  }
 
 }
 
@@ -75,7 +79,7 @@ resource azurerm_kubernetes_cluster_node_pool user {
   kubernetes_cluster_id = azurerm_kubernetes_cluster.dev.id
   vm_size               = each.value.vm_size
   node_count            = each.value.node_count
-  mode                  = "User"
+  mode                  = each.value.mode
   node_labels           = each.value.node_labels
   vnet_subnet_id        = var.subnet_id
   node_taints           = each.value.node_taints

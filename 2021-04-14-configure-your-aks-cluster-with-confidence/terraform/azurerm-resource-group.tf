@@ -1,4 +1,4 @@
 resource "azurerm_resource_group" "default" {
-  name = "${local.prefix}-${var.location}"
+  name = "${local.prefix}-${local.suffix}"
   location = var.location
 }

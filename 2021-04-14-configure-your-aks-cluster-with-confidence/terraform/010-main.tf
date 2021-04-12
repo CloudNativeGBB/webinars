@@ -26,7 +26,7 @@ resource "random_password" "cert_password" {
 }
 
 locals {
-	prefix = "${var.prefix}-${terraform.workspace}-${random_string.suffix.result}"
+	prefix = var.prefix
 	suffix = random_string.suffix.result
 	cert_password = random_password.cert_password.result
 }

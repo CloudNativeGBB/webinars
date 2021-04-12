@@ -7,7 +7,6 @@ module "aks" {
 
 	aks_settings = {
     	kubernetes_version		= null
-		private_cluster_enabled = true
 		identity 				= "SystemAssigned"
 		outbound_type			= "loadBalancer"
 		network_plugin			= "azure"
@@ -15,7 +14,11 @@ module "aks" {
 		load_balancer_sku		= "standard"
 		service_cidr			= "172.16.0.0/22"
 		dns_service_ip 			= "172.16.0.10"
-		docker_bridge_cidr 		= "172.16.0.1/16"
+		docker_bridge_cidr 		= "172.16.4.1/22"
+		sku_tier				= "Paid"
+		role_based_access_control_enabled = true
+		azure_active_directory_managed = true
+		admin_group_object_ids  = ["8c5473e9-90b0-4eb7-a0ac-63cdcb61947b"]
 	}
 
 	default_node_pool = {

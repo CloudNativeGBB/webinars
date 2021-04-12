@@ -1,4 +1,4 @@
-export PREFIX="webinar1"
+export PREFIX="webinarbicep"
 export SUFFIX="randsuffix"
 export RG_NAME=$PREFIX-$SUFFIX
 export RG_LOCATION="eastus2"
