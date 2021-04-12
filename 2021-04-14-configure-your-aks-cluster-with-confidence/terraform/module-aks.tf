@@ -6,7 +6,7 @@ module "aks" {
 	resource_group 	= azurerm_resource_group.default
 
 	aks_settings = {
-    	kubernetes_version		= null
+    	kubernetes_version		= var.kubernetes_version
 		identity 				= "SystemAssigned"
 		outbound_type			= "loadBalancer"
 		network_plugin			= "azure"
@@ -18,7 +18,7 @@ module "aks" {
 		sku_tier				= "Paid"
 		role_based_access_control_enabled = true
 		azure_active_directory_managed = true
-		admin_group_object_ids  = ["8c5473e9-90b0-4eb7-a0ac-63cdcb61947b"]
+		admin_group_object_ids  = var.admin_group_object_ids
 	}
 
 	default_node_pool = {

@@ -1,6 +1,6 @@
 param prefix string
 param suffix string
-param vnetPrefix string
+param vnetPrefix string = '10.0.0.0/16'
 param k8sVersion string = '1.18.14'
 param adminUsername string = 'azueruser'
 param adminPublicKey string
@@ -46,7 +46,7 @@ module aks 'modules/040-aks-cluster.bicep' = {
     aksSettings: {
       clusterName: '${prefix}-${suffix}-aks'
       identity: 'SystemAssigned'
-      kubernetesVersion: '1.18.14'
+      kubernetesVersion: k8sVersion
       networkPlugin: 'azure'
       networkPolicy: 'calico'
       serviceCidr: '172.16.0.0/22' // Must be cidr not in use any where else across the Network (Azure or Peered/On-Prem).  Can safely be used in multiple clusters - presuming this range is not broadcast/advertised in route tables.

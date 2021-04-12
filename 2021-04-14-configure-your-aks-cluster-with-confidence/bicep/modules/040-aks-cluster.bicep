@@ -5,6 +5,7 @@ param adminUsername string = 'azueruser'
 param adminPublicKey string
 
 param aksSettings object = {
+  kubernetesVersion: null
   identity: 'SystemAssigned'
   networkPlugin: 'azure'
   networkPolicy: 'calico'
@@ -32,6 +33,7 @@ param defaultNodePool object = {
   enableAutoScaling: true
   type: 'VirtualMachineScaleSets'
   mode: 'System' // setting this to system type for just k8s system services
+  orchestratorVersion: null
   nodeTaints: [
     'CriticalAddonsOnly=true:NoSchedule' // adding to ensure that only k8s system services run on these nodes
   ]
