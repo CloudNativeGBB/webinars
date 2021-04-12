@@ -9,10 +9,6 @@ variable "subnet_id" {
 variable "resource_group" {
 }
 
-variable "log_analytics_workspace_id" {
-	type = string
-}
-
 variable aks_settings {
 	type = object({
 		kubernetes_version		= string

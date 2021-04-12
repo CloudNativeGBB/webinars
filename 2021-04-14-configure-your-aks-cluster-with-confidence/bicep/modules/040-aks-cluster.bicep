@@ -5,7 +5,7 @@ param adminUsername string = 'azueruser'
 param adminPublicKey string
 param aadTenantId string
 param adminGroupObjectIDs array
-param nodepools array
+param userNodePools array
 
 var clusterName = '${prefix}-${suffix}-aks'
 
@@ -152,7 +152,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-02-01' = {
   }
 }
 
-resource aksNodepool 'Microsoft.ContainerService/managedClusters/agentPools@2021-02-01' = [ for nodepool in nodepools: {
+resource aksNodepool 'Microsoft.ContainerService/managedClusters/agentPools@2021-02-01' = [ for nodepool in userNodePools: {
   name: '${aks.name}/${nodepool.name}'
   properties: {
     count: nodepool.count

@@ -36,6 +36,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-08-01' = {
 
 module aks 'modules/040-aks-cluster.bicep' = {
   name: 'AksCluster'
+  
   params: {
     prefix: prefix
     suffix: suffix
@@ -44,7 +45,7 @@ module aks 'modules/040-aks-cluster.bicep' = {
     aadTenantId: aadTenantId
     adminGroupObjectIDs: adminGroupObjectIDs
     
-    nodepools: [
+    userNodePools: [
       {
         name: 'usernp01'
         count: 2

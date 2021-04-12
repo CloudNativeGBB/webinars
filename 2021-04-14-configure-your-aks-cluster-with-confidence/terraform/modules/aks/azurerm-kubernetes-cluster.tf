@@ -1,3 +1,11 @@
+resource azurerm_log_analytics_workspace aks {
+  name                = "${local.prefix}-logA-ws"
+  location            = var.resource_group.location
+  resource_group_name = var.resource_group.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
 resource azurerm_kubernetes_cluster dev {
   name                = "${local.prefix}-aks-cluster"
   location            = var.resource_group.location
@@ -22,6 +30,7 @@ resource azurerm_kubernetes_cluster dev {
   identity {
     type = var.aks_settings.identity
   }
+
   linux_profile {
     admin_username = "azureuser"
     ssh_key					= file("~/.ssh/id_rsa.pub")
@@ -40,7 +49,7 @@ resource azurerm_kubernetes_cluster dev {
   addon_profile {
     oms_agent {
       enabled                    = true
-      log_analytics_workspace_id = var.log_analytics_workspace_id
+      log_analytics_workspace_id = azurerm_log_analytics_workspace.aks.id
     }
     kube_dashboard {
       enabled = false
