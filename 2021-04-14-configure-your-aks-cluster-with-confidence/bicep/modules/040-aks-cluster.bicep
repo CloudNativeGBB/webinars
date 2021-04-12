@@ -3,7 +3,6 @@ param suffix string
 param subnetId string
 param adminUsername string = 'azueruser'
 param adminPublicKey string
-param aadTenantId string
 param adminGroupObjectIDs array
 param userNodePools array
 
@@ -31,6 +30,10 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-02-01' = {
   location: resourceGroup().location
   identity: {
     type: 'SystemAssigned'
+  }
+  sku: {
+    name: 'Basic'
+    tier: 'Paid'
   }
   properties: {
     kubernetesVersion: '1.19.7'
@@ -75,7 +78,6 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-02-01' = {
     aadProfile: {
       managed: true
       // enableAzureRBAC: true // Cross-Tenant Azure RBAC doesn't work - must be same tenant as the cluster subscription
-      tenantID: aadTenantId
       adminGroupObjectIDs: adminGroupObjectIDs
     }
 

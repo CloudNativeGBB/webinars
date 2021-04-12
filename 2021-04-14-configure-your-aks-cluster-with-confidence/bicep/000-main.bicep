@@ -41,8 +41,8 @@ module aks 'modules/040-aks-cluster.bicep' = {
     prefix: prefix
     suffix: suffix
     subnetId: '${vnet.id}/subnets/${aksSubnetInfo.name}'
+    
     adminPublicKey: adminPublicKey
-    aadTenantId: aadTenantId
     adminGroupObjectIDs: adminGroupObjectIDs
     
     userNodePools: [
