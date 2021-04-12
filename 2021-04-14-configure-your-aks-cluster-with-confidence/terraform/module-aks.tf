@@ -2,6 +2,7 @@ module "aks" {
 	source 			= "./modules/aks"
 
 	prefix 			= local.prefix
+	suffix			= var.suffix
 	subnet_id 		= azurerm_subnet.aks.id
 	resource_group 	= azurerm_resource_group.default
 	acrRole			= var.acrRole

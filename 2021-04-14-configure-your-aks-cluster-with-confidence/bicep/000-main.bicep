@@ -108,8 +108,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2020-11-01-preview' = {
     name: 'Premium'
   }
   properties: {
-    adminUserEnabled: false // disable username/password auth
-
+    adminUserEnabled: true // disable username/password auth
   }
 }
 

@@ -1,8 +1,9 @@
 resource "azurerm_container_registry" "aks" {
-  name = "${local.prefix}${var.suffx}"
+  name = "${local.prefix}${var.suffix}"
   resource_group_name = var.resource_group.name
   location =  var.resource_group.location
   sku = "Standard"
+  admin_enabled = true
 }
 
 resource "azurerm_role_assignment" "example" {

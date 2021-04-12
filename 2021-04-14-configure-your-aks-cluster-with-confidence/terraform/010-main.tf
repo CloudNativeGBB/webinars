@@ -19,14 +19,7 @@ resource random_string suffix {
   number = false
 }
 
-resource "random_password" "cert_password" {
-  length           = 16
-  special          = true
-  override_special = "_%@"
-}
-
 locals {
 	prefix = var.prefix
 	suffix = var.suffix
-	cert_password = random_password.cert_password.result
 }
