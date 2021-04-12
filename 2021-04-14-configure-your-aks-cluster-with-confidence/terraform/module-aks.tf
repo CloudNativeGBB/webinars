@@ -32,4 +32,14 @@ module "aks" {
 		os_disk_size_gb = 30
 		only_critical_addons_enabled = true
 	}
+
+	user_node_pools = {
+		usernp1 = {
+			vm_size = "Standard_D4s_v3"
+			node_count = 3
+			node_labels = null
+			node_taints = []
+			mode = "User"
+		}
+	}
 }
