@@ -21,17 +21,26 @@ az aks upgrade \
 	--kubernetes-version $KUBERNETES_VERSION \
 	--control-plane-only
 
-## Upgrade all node pools only
+## Upgrade all node pools images only
 ## https://docs.microsoft.com/en-us/azure/aks/node-image-upgrade#upgrade-all-nodes-in-all-node-pools
 az aks upgrade \
     --resource-group $RESOURCE_GROUP_NAME \
     --name $CLUSTER_NAME \
     --node-image-only
 
-## Upgrade specific node pools
-## https://docs.microsoft.com/en-us/azure/aks/node-image-upgrade#upgrade-a-specific-node-pool
+## Upgrade specific node pools only
+##
 export NODE_POOL_NAME=""
 
+## Node pool K8s version updates
+## Upgrade node pool k8s version only
+az aks nodepool upgrade \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --cluster-name $CLUSTER_NAME \
+    --name $NODE_POOL_NAME \
+    --kubernetes-version $KUBERNETES_VERSION
+
+## IMAGE UPGRADES
 ## Check node pool image upgrade candidates
 az aks nodepool get-upgrades \
     --nodepool-name $NODE_POOL_NAME \
@@ -46,6 +55,7 @@ az aks nodepool show \
     --query nodeImageVersion
 
 ## Apply upgrade
+## https://docs.microsoft.com/en-us/azure/aks/node-image-upgrade#upgrade-a-specific-node-pool
 az aks nodepool upgrade \
     --resource-group $RESOURCE_GROUP_NAME \
     --cluster-name $CLUSTER_NAME \
