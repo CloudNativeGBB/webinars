@@ -35,7 +35,7 @@ resource azurerm_kubernetes_cluster dev {
   linux_profile {
     admin_username = "azureuser"
     ssh_key					{
-      key_data = file("~/.ssh/id_rsa.pub")
+      key_data = file(var.aks_settings.ssh_key)
     }
   }
 

@@ -4,6 +4,7 @@ module "aks" {
 	prefix 			= local.prefix
 	subnet_id 		= azurerm_subnet.aks.id
 	resource_group 	= azurerm_resource_group.default
+	acrRole			= var.acrRole
 
 	aks_settings = {
     	kubernetes_version		= var.kubernetes_version
@@ -19,6 +20,7 @@ module "aks" {
 		role_based_access_control_enabled = true
 		azure_active_directory_managed = true
 		admin_group_object_ids  = var.admin_group_object_ids
+		ssh_key					= var.adminPublicKey
 	}
 
 	default_node_pool = {

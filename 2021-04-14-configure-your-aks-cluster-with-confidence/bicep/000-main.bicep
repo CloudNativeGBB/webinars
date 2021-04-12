@@ -4,7 +4,6 @@ param vnetPrefix string = '10.0.0.0/16'
 param k8sVersion string = '1.18.14'
 param adminUsername string = 'azueruser'
 param adminPublicKey string
-param aadTenantId string = subscription().tenantId
 param adminGroupObjectIDs array = []
 param acrRole string
 

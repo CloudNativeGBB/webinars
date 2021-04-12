@@ -9,6 +9,12 @@ variable "subnet_id" {
 variable "resource_group" {
 }
 
+variable "acrRole" {
+  type = string
+  description = "ACR Role Permission for AKS"
+  default	= "AcrPull"
+}
+
 variable aks_settings {
 	type = object({
 		kubernetes_version		= string
@@ -24,6 +30,7 @@ variable aks_settings {
 		role_based_access_control_enabled = bool
 		azure_active_directory_managed = bool
 		admin_group_object_ids  = list(string)
+		ssh_key					= string
 	})
 	default = {
 		kubernetes_version		= null
@@ -39,6 +46,7 @@ variable aks_settings {
 		role_based_access_control_enabled = true
 		azure_active_directory_managed = true
 		admin_group_object_ids  = [null]
+		ssh_key					= "~/.ssh/id_rsa.pub"
 		# admin_username			= "azureuser"
 		# ssh_key					= null
 	}
