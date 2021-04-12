@@ -27,6 +27,6 @@ resource "random_password" "cert_password" {
 
 locals {
 	prefix = var.prefix
-	suffix = random_string.suffix.result
+	suffix = var.suffix
 	cert_password = random_password.cert_password.result
 }

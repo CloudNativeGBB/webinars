@@ -1,5 +1,5 @@
 resource azurerm_log_analytics_workspace aks {
-  name                = "${local.prefix}-logA-ws"
+  name                = "${local.prefix}-${var.suffix}-logA-ws"
   location            = var.resource_group.location
   resource_group_name = var.resource_group.name
   sku                 = "PerGB2018"
@@ -7,7 +7,7 @@ resource azurerm_log_analytics_workspace aks {
 }
 
 resource azurerm_kubernetes_cluster dev {
-  name                = "${local.prefix}-aks-cluster"
+  name                = "${local.prefix}-${var.suffix}-aks"
   location            = var.resource_group.location
   resource_group_name = var.resource_group.name
   
