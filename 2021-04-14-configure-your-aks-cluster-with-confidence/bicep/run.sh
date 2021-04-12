@@ -1,10 +1,10 @@
-export PREFIX="webinar"
+export PREFIX="webinar1"
 export SUFFIX="randsuffix"
 export RG_NAME=$PREFIX-$SUFFIX
 export RG_LOCATION="eastus2"
 export BICEP_FILE="000-main.bicep"
 export WEBINAR_PARAMETERS="@parameters.json"
-# Must search for the 'ACRPull' role to get GUID
+# Must search for the 'ACRPull' role to get GUID - Bicep/ARM Templates does not have the ability to dynamically lookup permission role names and UUIDs
 export ACR_PULL_ROLE=$(az role definition list --name 'AcrPull' | jq -r .[].id)
 
 # Login to your Azure account

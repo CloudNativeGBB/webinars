@@ -1,6 +1,7 @@
 param prefix string
 param suffix string
 param vnetPrefix string
+param k8sVersion string = '1.18.14'
 param adminUsername string = 'azueruser'
 param adminPublicKey string
 param aadTenantId string = subscription().tenantId
@@ -36,11 +37,32 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-08-01' = {
 module aks 'modules/040-aks-cluster.bicep' = {
   name: 'AksCluster'
   params: {
-    clusterName: '${prefix}-${suffix}-aks'
+    prefix: prefix
+    suffix: suffix
     subnetId: '${vnet.id}/subnets/${aksSubnetInfo.name}'
     adminPublicKey: adminPublicKey
     aadTenantId: aadTenantId
     adminGroupObjectIDs: adminGroupObjectIDs
+    
+    nodepools: [
+      {
+        name: 'usernp01'
+        count: 2
+        vmSize: 'Standard_D4s_v3'
+        osDiskSizeGB: 100
+        osDiskType: 'Ephemeral'
+        maxPods: 30
+        maxCount: 6
+        minCount: 2
+        enableAutoScaling: true
+        mode: 'User'
+        orchestratorVersion: k8sVersion
+        maxSurge: null
+        tags: {}
+        nodeLabels: {}
+        taints: []
+      }
+    ]
   }
 }
 
