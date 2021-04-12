@@ -4,4 +4,4 @@ Full Cluster Upgrades
 
 Node Pool upgrades (K8s version and Node Pool Images)
 - [Upgrade a node pool](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools#upgrade-a-node-pool)
-- [https://docs.microsoft.com/en-us/azure/aks/node-image-upgrade](https://docs.microsoft.com/en-us/azure/aks/node-image-upgrade)
+- [Node Image Upgrade](https://docs.microsoft.com/en-us/azure/aks/node-image-upgrade)
