@@ -1,7 +1,7 @@
 param prefix string
 param suffix string
 param subnetId string
-param adminUsername string = 'azueruser'
+param adminUsername string = 'azureuser'
 param adminPublicKey string
 
 param aksSettings object = {
