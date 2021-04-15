@@ -2,7 +2,7 @@ resource "azurerm_container_registry" "aks" {
   name = "${local.prefix}${var.suffix}"
   resource_group_name = var.resource_group.name
   location =  var.resource_group.location
-  sku = "Standard"
+  sku = "Premium"
   admin_enabled = true
 }
 
