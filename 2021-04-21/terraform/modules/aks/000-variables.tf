@@ -40,7 +40,6 @@ variable aks_settings {
 	default = {
 		kubernetes_version		= null
 		identity 				= "SystemAssigned"
-		outbound_type			= "loadBalancer"
 		network_plugin			= "azure"
 		network_policy			= "calico"
 		load_balancer_sku		= "standard"
@@ -52,7 +51,9 @@ variable aks_settings {
 		azure_active_directory_managed = true
 		admin_group_object_ids  = [null]
 		ssh_key					= "~/.ssh/id_rsa.pub"
+		
 		private_cluster_enabled = true
+		outbound_type			= "userDefinedRouting"
 		# admin_username			= "azureuser"
 		# ssh_key					= null
 	}

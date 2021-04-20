@@ -14,7 +14,7 @@ resource azurerm_kubernetes_cluster dev {
   dns_prefix          = "${local.prefix}-aks-cluster"
   
   kubernetes_version  = var.aks_settings.kubernetes_version
-  private_cluster_enabled = false
+  private_cluster_enabled = var.aks_settings.private_cluster_enabled
 
   default_node_pool {
     name                = var.default_node_pool.name
