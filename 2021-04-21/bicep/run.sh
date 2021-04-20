@@ -1,6 +1,6 @@
 #! /bin/bash
 
-export PREFIX="webinar1bc"
+export PREFIX="webinar2bc"
 export SUFFIX="randsuffix"
 export RG_NAME=$PREFIX-$SUFFIX
 export RG_LOCATION="eastus2"
