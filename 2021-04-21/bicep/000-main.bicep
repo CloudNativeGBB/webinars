@@ -27,6 +27,89 @@ var allSubnets = [
   aksSubnetInfo
 ]
 
+var applicationRuleCollections = [
+  {
+    name: 'aksFirewallRules'
+    properties: {
+      priority: 100
+      action: {
+        type: 'allow'
+      }
+      rules: [
+        {
+          name: 'aksFirewallRules'
+          description: 'Rules needed for AKS to operate'
+          sourceAddresses: [
+            aksSubnetInfo.properties.addressPrefix
+          ]
+          protocols: [
+            {
+              protocolType: 'Https'
+              port: 443
+            }
+            {
+              protocolType: 'Http'
+              port: 80
+            }
+          ]
+          targetFqdns: [
+            '*.hcp.${resourceGroup().location}.azmk8s.io'
+            'mcr.microsoft.com'
+            '*.cdn.mcr.io'
+            '*.data.mcr.microsoft.com'
+            'management.azure.com'
+            'login.microsoftonline.com'
+            'dc.services.visualstudio.com'
+            '*.ods.opinsights.azure.com'
+            '*.oms.opinsights.azure.com'
+            '*.monitoring.azure.com'
+            'packages.microsoft.com'
+            'acs-mirror.azureedge.net'
+            'azure.archive.ubuntu.com'
+            'security.ubuntu.com'
+            'changelogs.ubuntu.com'
+            'launchpad.net'
+            'ppa.launchpad.net'
+            'keyserver.ubuntu.com'
+          ]
+        }
+      ]
+    }
+  }
+]
+
+var natRuleCollections = []
+
+var networkRuleCollections = [
+  {
+    name: 'ntpRule'
+    properties: {
+      priority: 100
+      action: {
+        type: 'allow'
+      }
+      rules: [
+        {
+          name: 'ntpRule'
+          description: 'Allow Ubuntu NTP for AKS'
+          protocols: [
+            'UDP'
+          ]
+          sourceAddresses: [
+            aksSubnetInfo.properties.addressPrefix
+          ]
+          destinationAddresses: [
+            '*'
+          ]
+          destinationPorts: [
+            '123'
+          ]
+        }
+      ]
+    }
+  }
+]
+
 resource vnet 'Microsoft.Network/virtualNetworks@2020-08-01' = {
   name: '${prefix}-${suffix}-vnet'
   location: resourceGroup().location
@@ -41,13 +124,60 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-08-01' = {
   } 
 }
 
-module aks 'modules/040-aks-cluster.bicep' = {
-  name: 'AksCluster'
-  
+resource defaultRouteTable 'Microsoft.Network/routeTables@2020-07-01' = {
+  name: 'defaultRouteTable'
+  location: resourceGroup().location
+  tags: {}
+  properties: {
+    routes: [
+      {
+        properties: {
+          addressPrefix: '0.0.0.0/0'
+          nextHopType: 'VirtualAppliance'
+          nextHopIpAddress: '10.0.0.4' // hard coding the FW IP address as the azureFirewalls.hubIPAddresses.privateIPAddress does not seem to work as expected at this time on a single FW
+        }
+        name: 'defaultRoute'
+      }
+    ]
+    disableBgpRoutePropagation: true
+  }
+}
+
+resource aksSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-07-01' = {
+  name: '${vnet.name}/${aksSubnetInfo.name}'
+  properties: union(aksSubnetInfo.properties, {
+    routeTable: {
+      id: defaultRouteTable.id
+    }
+  })
+}
+
+module firewall 'modules/020-azure-firewall.bicep' = {
+  name: 'AzureFirewall'
+
   params: {
     prefix: prefix
     suffix: suffix
-    subnetId: '${vnet.id}/subnets/${aksSubnetInfo.name}'
+    subnetId: '${vnet.id}/subnets/${azureFirewallSubnetInfo.name}'
+    applicationRuleCollections: applicationRuleCollections
+    natRuleCollections: natRuleCollections
+    networkRuleCollections: networkRuleCollections
+  }
+}
+
+module aks 'modules/040-aks-cluster.bicep' = {
+  name: 'AksCluster'
+  
+  dependsOn: [
+    firewall
+    aksSubnet
+    defaultRouteTable
+  ]
+
+  params: {
+    prefix: prefix
+    suffix: suffix
+    subnetId: aksSubnet.id
     adminPublicKey: adminPublicKey
 
     aksSettings: {
