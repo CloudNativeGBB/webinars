@@ -22,9 +22,17 @@ var aksSubnetInfo = {
   }
 }
 
+var jumpboxSubnetInfo = {
+  name: 'JumpboxSubnet'
+  properties: {
+    addressPrefix: '10.0.255.240/28'
+  }
+}
+
 var allSubnets = [
   azureFirewallSubnetInfo
   aksSubnetInfo
+  jumpboxSubnetInfo
 ]
 
 var applicationRuleCollections = [
@@ -262,3 +270,16 @@ resource aksAcrPermissions 'Microsoft.Authorization/roleAssignments@2020-04-01-p
     roleDefinitionId: acrRole
   }
 }
+
+module jumpbox 'modules/030-jumpbox.bicep' = {
+  name: 'jumpbox'
+  params: {
+    prefix: prefix
+    suffix: suffix
+    subnetId: '${vnet.id}/subnets/${jumpboxSubnetInfo.name}'
+    adminUsername: adminUsername
+    adminSshKey: adminPublicKey
+  }
+}
+
+output jumpboxFqdn string = jumpbox.outputs.fqdn
