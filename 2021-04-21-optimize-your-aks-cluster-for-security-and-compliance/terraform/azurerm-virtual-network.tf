@@ -20,3 +20,10 @@ resource "azurerm_subnet" "aks" {
   # enforce_private_link_service_network_policies = false  
   enforce_private_link_endpoint_network_policies = false
 }
+
+resource "azurerm_subnet" "jumpbox" {
+  name                 = "JumpboxSubnet"
+  resource_group_name  = azurerm_resource_group.default.name
+  virtual_network_name = azurerm_virtual_network.default.name
+  address_prefixes     = ["10.0.255.240/28"]
+}
